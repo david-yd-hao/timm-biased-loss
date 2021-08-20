@@ -23,6 +23,11 @@ I'm fortunate to be able to dedicate significant time and money of my own suppor
 
 ## What's New
 
+### Aug 21, 2021
+* Added Biased Loss Cross Entropy support for training. (https://arxiv.org/abs/2107.11170, ICCV 2021)
+  * Currently supporting: MobileNetv3
+* Added a environment test file to test the system environment.
+
 ### Aug 18, 2021
 * Optimizer bonanza!
   * Add LAMB and LARS optimizers, incl trust ratio clipping options. Tweaked to work properly in PyTorch XLA (tested on TPUs w/ `timm bits` [branch](https://github.com/rwightman/pytorch-image-models/tree/bits_and_tpu/timm/bits))
