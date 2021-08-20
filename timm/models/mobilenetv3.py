@@ -91,7 +91,7 @@ class MobileNetV3(nn.Module):
 
     def __init__(self, block_args, num_classes=1000, in_chans=3, stem_size=16, num_features=1280, head_bias=True,
                  pad_type='', act_layer=None, norm_layer=None, se_layer=None, se_from_exp=True,
-                 round_chs_fn=round_channels, drop_rate=0., drop_path_rate=0., global_pool='avg'):
+                 round_chs_fn=round_channels, drop_rate=0., drop_path_rate=0., global_pool='avg', biasedtra=False):
         super(MobileNetV3, self).__init__()
         act_layer = act_layer or nn.ReLU
         norm_layer = norm_layer or nn.BatchNorm2d
@@ -99,6 +99,7 @@ class MobileNetV3(nn.Module):
         self.num_classes = num_classes
         self.num_features = num_features
         self.drop_rate = drop_rate
+        self.biasedtra = biasedtra
 
         # Stem
         stem_size = round_chs_fn(stem_size)
@@ -153,10 +154,13 @@ class MobileNetV3(nn.Module):
 
     def forward(self, x):
         x = self.forward_features(x)
-        x = self.flatten(x)
+        x2 = self.flatten(x)
         if self.drop_rate > 0.:
-            x = F.dropout(x, p=self.drop_rate, training=self.training)
-        return self.classifier(x)
+            x2 = F.dropout(x2, p=self.drop_rate, training=self.training)
+        if self.biasedtra == True:
+            return self.classifier(x2), x
+        elif self.biasedtra == False:
+            return self.classifier(x2)
 
 
 class MobileNetV3Features(nn.Module):
